@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactComponentElement } from "react";
 import Link from "next/link";
 
 interface Link {
@@ -28,12 +28,14 @@ export default function Card( props: CardProps ) {
 	} = props;
 	const linkTypes = {
 		internal: Link,
-		external: HTMLAnchorElement
+		external: 'a' as JSX.IntrinsicElements['a']
 	}
-	const Linked = linkTypes.internal;
+	const Linked = linkTypes.external;
 	return (
 		<div className="card mds__component">
 			<Linked href={link.url}>hey</Linked>
+			<h2></h2>
+			<a href={link.url}>yo</a>
 		</div>
 	);
 };

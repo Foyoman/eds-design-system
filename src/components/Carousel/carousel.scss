@@ -1,0 +1,113 @@
+.container {
+	padding-top: var(--spacer-lg);
+	padding-bottom: var(--spacer-lg);
+
+	.carousel-container {
+		position: relative;
+
+		.horizontal-scroll {
+			scroll-behavior: smooth;
+			display: flex;
+			overflow-x: auto;
+			justify-content: space-between;
+			padding: 0 var(--spacer-sm) 26px var(--spacer-sm);
+			scroll-snap-type: x proximity;
+
+			&.full {
+				mask-image: linear-gradient(to right, transparent 0%, black 5% 95%, transparent 100%);
+			}
+
+			&.left {
+				mask-image: linear-gradient(to right, transparent 0%, black 5% 100%, transparent 100%);
+			}
+
+			&.right {
+				mask-image: linear-gradient(to right, transparent 0%, black 0% 95%, transparent 100%);
+			}
+
+			&::-webkit-scrollbar {
+				display: none;
+			}
+
+			&:before {
+				position: sticky;
+				padding-bottom: var(--spacer-sm);
+			}
+
+			&:after {
+				content: '';
+				padding-right: 0.02px;
+			}
+
+			.item {
+				margin: 1rem;
+				min-width: 300px;
+				scroll-snap-align: center;
+			}
+		}
+
+		.chevron {
+			transition: ease-in-out 0.2s;
+			position: absolute;
+			top: calc(50% - 16px - 26px / 2);
+			background: #fff;
+			border-radius: 4px;
+			box-shadow: 0 0px 15px rgb(0 0 0 / 8%);
+			height: 32px;
+			width: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: var(--brand-navy);
+
+			&:hover {
+				cursor: pointer;
+				box-shadow: 0 0px 15px rgb(0 0 0 / 15%);
+			}
+		}
+
+		#left-chevron {
+			left: 0;
+			transform: rotate(90deg);
+			&.right {
+				display: none;
+			}
+		}
+
+		#right-chevron {
+			right: 0;
+			transform: rotate(270deg);
+			&.left {
+				display: none;
+			}
+		}
+	}
+
+	// Mobile Styles
+	@media only screen and (max-width: 425px) {
+		padding-left: 0;
+		padding-right: 0;
+
+		.text-container {
+			padding-left: var(--spacer-lg);
+			padding-right: var(--spacer-lg);
+		}
+
+		.carousel-container {
+			.horizontal-scroll::v-deep {
+				.item {
+					margin: var(--spacer-sm);
+					min-width: 80%;
+				}
+				&.full,
+				&.left,
+				&.right {
+					mask-image: none;
+				}
+			}
+			.chevron {
+				display: none;
+			}
+		}
+	}
+}

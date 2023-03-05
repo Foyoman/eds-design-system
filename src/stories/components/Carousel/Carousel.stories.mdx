@@ -1,0 +1,45 @@
+import Carousel from '../../../components/Carousel/Carousel.tsx';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+	title="Carousel/Carousel"
+	component={Carousel}
+	argTypes={{
+		// ...
+	}}
+/>
+
+# Carousel
+
+A Carousel
+
+export const CarouselTemplate = (args, { argTypes }) => <Carousel {...args} />
+
+<Canvas>
+	<Story
+		name="Overview"
+		parameters={{
+			docs: {
+				source: {
+					type: "dynamic",
+					format: true,
+				},
+			},
+	  }}
+		args={{
+			heading: 'Heading',
+			subheading: 'Subheading',
+			items: [
+				{
+					name: 'component'
+				}
+			]
+		}}
+  >
+		{CarouselTemplate.bind({})}
+	</Story>
+</Canvas>
+
+### Props & Slots
+
+<ArgsTable story="Overview" />
