@@ -1,0 +1,25 @@
+// Media Devices
+$devices: (
+	xs: 0,
+	sm: 425px,
+	md: 768px,
+	lg: 992px,
+	xl: 1200px,
+	xxl: 1400px,
+);
+
+// Media from breakpoint
+$from-xs: 'min-width: 0px';
+$from-sm: 'min-width: 426px';
+$from-md: 'min-width: 769px';
+$from-lg: 'min-width: 993px';
+$from-xl: 'min-width: 1201px';
+$from-xxl: 'min-width: 1401px';
+
+// Media max-width breakpoint
+$max-xs: 'max-width: #{map-get($devices, xs)}';
+$max-sm: 'max-width: #{map-get($devices, sm)}';
+$max-md: 'max-width: #{map-get($devices, md)}';
+$max-lg: 'max-width: #{map-get($devices, lg)}';
+$max-xl: 'max-width: #{map-get($devices, xl)}';
+$max-xxl: 'max-width: #{map-get($devices, xxl)}';

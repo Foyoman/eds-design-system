@@ -1,0 +1,43 @@
+import Card from '../../../components/Card/Card.tsx';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
+
+<Meta
+	title="Card/Card"
+	component={Card}
+	argTypes={{
+		// ...
+	}}
+/>
+
+# Card
+
+A Card
+
+export const CardTemplate = (args, { argTypes }) => <Card {...args} />
+
+<Canvas>
+	<Story
+		name="Overview"
+		parameters={{
+			docs: {
+				source: {
+					type: "dynamic",
+					format: true,
+				},
+			},
+	  }}
+		args={{
+			title: 'yes',
+			link: {
+				linktype: 'external',
+				url: 'https://www.edwardtdo.com'
+			}
+		}}
+  >
+		{CardTemplate.bind({})}
+	</Story>
+</Canvas>
+
+### Props & Slots
+
+<ArgsTable story="Overview" />

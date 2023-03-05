@@ -1,0 +1,51 @@
+$grid-column-count: 12;
+
+.grid {
+  display: grid;
+  grid-gap: 2rem;
+
+  @for $i from 1 through $grid-column-count {
+    &-#{$i} {
+      grid-template-columns: repeat($i, 1fr);
+    }
+  }
+
+  @each $device,
+  $breakpoint in $devices {
+    @media screen and (min-width: $breakpoint) {
+      @for $i from 1 through $grid-column-count {
+        &-#{$device}-#{$i} {
+          grid-template-columns: repeat($i, 1fr);
+          grid-gap: 3rem;
+        }
+      }
+    }
+  }
+
+  // .grid-item {  
+  //   grid-column: span 2;
+
+  //   &:last-child:nth-child(3n - 1) {
+  //     grid-column-end: -1;
+  //   }
+
+  //   &:last-child:nth-child(3n - 2) {
+  //       grid-column-end: 3;
+  //   }
+  // }
+
+
+  //   /* Dealing with 2 orphan items */
+  // &:last-child:nth-child(3n - 1) {
+  //     grid-column-end: -2;
+  // }
+
+  // &:nth-last-child(2):nth-child(3n + 1) {
+  //     grid-column-end: 4;
+  // }
+
+  // /* Dealing with single orphan */
+  // &:last-child:nth-child(3n - 2) {
+  //     grid-column-end: 5;
+  // }
+}

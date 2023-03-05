@@ -1,0 +1,80 @@
+$max: 12;
+$offset: 1;
+$unit: 'rem';
+
+@mixin spacer-loop($className, $styleName) {
+  $i: 0;
+
+  @while $i <=$max {
+    #{$className + $i} {
+      #{$styleName}: #{$i + $unit};
+    }
+
+    $i: $i+$offset;
+    // @for @media screen and (max-width: 992px) {
+    //   $i: $i + $offset/2;
+    // }
+  }
+
+}
+
+@include spacer-loop('.pl-', 'padding-left');
+@include spacer-loop('.pr-', 'padding-right');
+@include spacer-loop('.pt-', 'padding-top');
+@include spacer-loop('.pb-', 'padding-bottom');
+@include spacer-loop('.p-', 'padding');
+
+@include spacer-loop('.ml-', 'margin-left');
+@include spacer-loop('.mr-', 'margin-right');
+@include spacer-loop('.mt-', 'margin-top');
+@include spacer-loop('.mb-', 'margin-bottom');
+@include spacer-loop('.m-', 'margin');
+
+@media ($max-lg) {
+  .pt-6 {
+    padding-top: 3rem;
+  }
+
+  .pb-6 {
+    padding-bottom: 3rem;
+  }
+
+  .pb-sm-0 {
+    padding-bottom: 0 !important;
+  }
+}
+
+.auto {
+  margin: auto;
+}
+
+.auto-x {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.auto-y {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+// .grid {
+//   display: grid;
+//   grid-gap: 2rem;
+
+//   @for $i from 1 through $max { 
+//     &-#{$i} {
+//       grid-template-columns: repeat($i, 1fr);
+//     }
+//   } 
+//   @each $device, $breakpoint in $devices {  
+//     @media screen and (min-width: $breakpoint) {
+//       @for $i from 1 through $grid-column-count { 
+//         &-#{$device}-#{$i} {
+//           grid-template-columns: repeat($i, 1fr);
+//           grid-gap: 3rem;
+//         }
+//       } 
+//     } 
+//   }
+// }

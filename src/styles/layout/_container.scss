@@ -1,0 +1,30 @@
+.container {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: map-get($devices, xxl);
+	position: relative;
+	width: 100%;
+
+	@media (max-width: 1440px) {
+		max-width: map-get($devices, xl);
+	}
+	@media ($max-xxl) {
+		padding: 0 2rem;
+	}
+
+	@media ($max-xl) {
+		padding: 0 2rem;
+	}
+
+	@media ($max-md) {
+		padding: 0 1.5rem;
+	}
+
+	&--sm {
+		max-width: 1056px;
+	}
+
+	&--xs {
+		max-width: 600px;
+	}
+}

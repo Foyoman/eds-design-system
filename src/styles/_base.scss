@@ -1,0 +1,23 @@
+* {
+	-webkit-font-smoothing: antialiased;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	box-sizing: border-box;
+	color: var(--text-default);
+	font-size: 1rem;
+	font-family: 'Open Sans', Swap, sans-serif;
+	font-weight: 400;
+	line-height: 1.65;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Open Sans';
+	src: url(https://fonts.googleapis.com/css2?family=Open+Sans&display=swap);
+	font-display: swap;
+}
