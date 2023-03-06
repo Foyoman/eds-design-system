@@ -7,12 +7,35 @@ interface ComponentProps {
 	name: string;
 }
 
-interface CarouselProps {
+interface ChildrenProps {
 	children: React.ReactNode;
+}
+
+interface CarouselProps extends ChildrenProps {
 	heading?: string;
 	subheading?: string;
 	items: ComponentProps[];
 }
+
+interface DefaultWrapperProps {
+	children: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+	opacity?: number;
+}
+
+const wrapperStyle: React.CSSProperties = {
+	border: "5px solid red",
+	padding: `var(--spacer-md)`
+};
+const Wrapper = ({ children }: ChildrenProps) => <div style={wrapperStyle}>{children}</div>
+
+const DefaultWrapper = ({ children, opacity = 0.5 }: DefaultWrapperProps) =>
+	React.Children.map(children, (child: React.ReactElement) => (
+		<Wrapper>
+			{React.cloneElement(child, {
+				style: { ...child.props.style, opacity: opacity }
+			})}
+		</Wrapper>
+	));
 
 export default function Carousel( { children, ...props }: CarouselProps ) { 
 	const { 
@@ -52,7 +75,9 @@ export default function Carousel( { children, ...props }: CarouselProps ) {
 			{ items.length && 
 				<div className="carousel-container">
 					<div ref={carouselEl} className={`horizontal-scroll ${gradient}`} onScroll={handleScroll}>
-						{ children }
+						<DefaultWrapper>
+							{ children }
+						</DefaultWrapper>
 					</div>
 				</div>
 			}
