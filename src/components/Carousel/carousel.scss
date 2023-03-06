@@ -26,7 +26,30 @@
 			}
 
 			&::-webkit-scrollbar {
-				display: none;
+				height: 6px;
+			}
+			
+			&::-webkit-scrollbar-track {
+				margin: 0 4rem;
+				background-color: var(--border-grey-light);
+				border-radius: 10px;
+	
+				@media only screen and (max-width: 768px) {
+					margin: 0 2rem;
+				}
+	
+				@media only screen and (max-width: 425px) {
+					margin: 0 1rem;
+				}
+			}
+			
+			&::-webkit-scrollbar-thumb {
+				background: var(--brand-navy); 
+				border-radius: 10px;
+			}
+			
+			&::-webkit-scrollbar-thumb:hover {
+				background: var(--brand-navy-dark);
 			}
 
 			&:before {

@@ -1,5 +1,6 @@
-import React, { useState, useRef, MutableRefObject } from "react";
+import React, { useState, useRef, MutableRefObject, ReactComponentElement } from "react";
 import '!style-loader!css-loader!sass-loader!./carousel.scss'
+import Card from "../Card/Card";
 
 interface ComponentProps {
 	[key: string]: any;
@@ -7,12 +8,13 @@ interface ComponentProps {
 }
 
 interface CarouselProps {
+	children: React.ReactNode;
 	heading?: string;
 	subheading?: string;
 	items: ComponentProps[];
 }
 
-export default function Carousel( props: CarouselProps ) {
+export default function Carousel( { children, ...props }: CarouselProps ) { 
 	const { 
 		heading,
 		subheading,
@@ -50,7 +52,11 @@ export default function Carousel( props: CarouselProps ) {
 			{ items.length && 
 				<div className="carousel-container">
 					<div ref={carouselEl} className={`horizontal-scroll ${gradient}`} onScroll={handleScroll}>
-						
+						{/* {items.map((item, index) => {
+							const Component = item.name;
+							return <Component {...item} key={index} />
+						})} */}
+						{ children }
 					</div>
 				</div>
 			}

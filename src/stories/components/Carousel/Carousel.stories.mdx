@@ -1,4 +1,5 @@
 import Carousel from '../../../components/Carousel/Carousel.tsx';
+import Card from '../../../components/Card/Card.tsx';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
 <Meta
@@ -13,7 +14,17 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
 A Carousel
 
-export const CarouselTemplate = (args, { argTypes }) => <Carousel {...args} />
+export const CarouselTemplate = (args, { argTypes }) => (
+	<Carousel {...args}>
+		<Card />
+		<Card />
+		<Card />
+		<Card />
+		<Card />
+		<Card />
+		<Card />
+	</Carousel>
+)
 
 <Canvas>
 	<Story
@@ -31,7 +42,12 @@ export const CarouselTemplate = (args, { argTypes }) => <Carousel {...args} />
 			subheading: 'Subheading',
 			items: [
 				{
-					name: 'component'
+					name: 'Card',
+					title: 'yes',
+					link: {
+						linktype: 'external',
+						url: 'https://www.edwardtdo.com'
+					}
 				}
 			]
 		}}
