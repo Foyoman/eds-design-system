@@ -52,10 +52,6 @@ export default function Carousel( { children, ...props }: CarouselProps ) {
 			{ items.length && 
 				<div className="carousel-container">
 					<div ref={carouselEl} className={`horizontal-scroll ${gradient}`} onScroll={handleScroll}>
-						{/* {items.map((item, index) => {
-							const Component = item.name;
-							return <Component {...item} key={index} />
-						})} */}
 						{ children }
 					</div>
 				</div>
