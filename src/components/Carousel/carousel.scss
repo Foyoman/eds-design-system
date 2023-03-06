@@ -14,14 +14,17 @@
 			scroll-snap-type: x proximity;
 
 			&.full {
+				-webkit-mask-image: linear-gradient(to right, transparent 0%, black 5% 95%, transparent 100%);
 				mask-image: linear-gradient(to right, transparent 0%, black 5% 95%, transparent 100%);
 			}
 
 			&.left {
+				-webkit-mask-image: linear-gradient(to right, transparent 0%, black 5% 100%, transparent 100%);
 				mask-image: linear-gradient(to right, transparent 0%, black 5% 100%, transparent 100%);
 			}
 
 			&.right {
+				-webkit-mask-image: linear-gradient(to right, transparent 0%, black 0% 95%, transparent 100%);
 				mask-image: linear-gradient(to right, transparent 0%, black 0% 95%, transparent 100%);
 			}
 
