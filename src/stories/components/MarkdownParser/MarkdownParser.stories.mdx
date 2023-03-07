@@ -27,7 +27,8 @@ export const MarkdownParserTemplate = (args, { argTypes }) => <MarkdownParser {.
 			},
 	  }}
 		args={{
-			content: `# this is a test \ni love writing my notes in markdown with syntax highlighted code block integration so i made this wonderful component <3 \n\n---\n\`\`\`tsx \nconst hello = 123\n\`\`\``
+			content: `# this is a test \ni love writing my notes in markdown with syntax highlighted code block integration so i made this wonderful component <3 \n\n---\n\`\`\`tsx \nconst hello = 123\n\`\`\``,
+			theme: 'dark'
 		}}
   >
 		{MarkdownParserTemplate.bind({})}

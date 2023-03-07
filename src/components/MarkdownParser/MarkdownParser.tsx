@@ -1,16 +1,21 @@
-import React, { useState } from "react";
-import '!style-loader!css-loader!sass-loader!./markdownparser.scss'
+import React, { useEffect, useState } from "react";
+
+import "!style-loader!css-loader!sass-loader!./markdownparser.scss"
+import '!style-loader!css-loader!sass-loader!./github.scss';
+
 import ReactMarkdown from "react-markdown";
-import { PrismLight as SyntaxHighlighter } from 'react-syntax-highlighter';
-import tsx from 'react-syntax-highlighter/dist/cjs/languages/prism/tsx';
-import typescript from 'react-syntax-highlighter/dist/cjs/languages/prism/typescript';
-import scss from 'react-syntax-highlighter/dist/cjs/languages/prism/scss';
-import python from 'react-syntax-highlighter/dist/cjs/languages/prism/python';
-import bash from 'react-syntax-highlighter/dist/cjs/languages/prism/bash';
-import json from 'react-syntax-highlighter/dist/cjs/languages/prism/json';
-import markdown from 'react-syntax-highlighter/dist/cjs/languages/prism/markdown';
-import rangeParser from 'parse-numeric-range';
-import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
+import typescript from "react-syntax-highlighter/dist/cjs/languages/prism/typescript";
+import scss from "react-syntax-highlighter/dist/cjs/languages/prism/scss";
+import python from "react-syntax-highlighter/dist/cjs/languages/prism/python";
+import bash from "react-syntax-highlighter/dist/cjs/languages/prism/bash";
+import json from "react-syntax-highlighter/dist/cjs/languages/prism/json";
+import markdown from "react-syntax-highlighter/dist/cjs/languages/prism/markdown";
+import rangeParser from "parse-numeric-range";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+
+import Editor, { useMonaco } from "@monaco-editor/react";
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -22,36 +27,32 @@ SyntaxHighlighter.registerLanguage('json', json);
 
 interface MarkdownParserProps {
 	content: string;
+	theme: string;
 }
 
 export default function MarkdownParser (props: MarkdownParserProps) {
-	const { content } = props;
+	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
+	const monaco = useMonaco();
 
-	const syntaxTheme = oneDark;
+	useEffect(() => {
+		monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+		if (monaco) {
+			console.log("here is the monaco instance:", monaco);
+		}
+	}, [monaco]);
+
+	let syntaxTheme: typeof oneDark;
+	let editorTheme: string;
+	if (theme === "dark") {
+		syntaxTheme = oneDark;
+		editorTheme = 'vs-dark';
+	} else {
+		syntaxTheme = oneLight;
+		editorTheme = 'vs-light';
+	}
 	
 	const MarkdownComponents: object = {
-
-		// const styleMarkdown = css({
-		// 	'.codeStyle, pre, code, code span': {
-		// 		// Your SyntaxHighlighter override styles here
-		// 	},
-		// 	code: {
-		// 	 // Your general code styles here
-		// 	},
-		// 	'pre code': {
-		// 		// Your code-block styles here
-		// 	},
-		// 	'h3 code': {
-		// 		color: 'inherit'
-		// 	},
-		// 	'span.linenumber': {
-		// 		display: 'none !important'
-		// 	},
-		// 	'[data="highlight"]': {
-		// 		// Your custom line highlight styles here
-		// 	},
-		// })
 
 		code({ node, inline, className, ...props}) {
 			
@@ -94,20 +95,35 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 		},
 	}
 
-	const handleChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
-		const md = (e.target as HTMLTextAreaElement).value
-		setMarkdown(md);
+	const handleChange = (value: string | undefined, e: React.SyntheticEvent) => {
+		console.log(value);
+		console.log(e);
+		if (value) setMarkdown(value);
+	}
+
+	const options: object = {
+		selectOnLineNumbers: true,
 	}
 	
 	return (
-		<div className="md-parser">
+		<div className={`md-parser ${theme}`}>
 			<ReactMarkdown
 				components={MarkdownComponents}
-				// css={styleMarkdown}
+				className="markdown-body"
 			>
 				{ markdown }
 			</ReactMarkdown>
-			<textarea cols={30} rows={10} onChange={handleChange} value={markdown} />
+			{/* <textarea cols={30} rows={10} onChange={handleChange} value={markdown} /> */}
+			<Editor 
+				height="90vh"
+				width="100%"
+				defaultLanguage="markdown"
+				defaultValue="// some comment"
+				theme={editorTheme}
+				value={markdown}
+				onChange={handleChange}
+				options={options}
+			/>
 		</div>
 	)
 }
