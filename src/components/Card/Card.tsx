@@ -60,7 +60,7 @@ export default function Card( props: CardProps ) {
 		<div className="card mds__component">
 			<figure className="picture">
 				<Image
-					format="webp"
+					// format="webp"
 					className="card-img"
 					loading="lazy"
 					src={image && image.filename}
@@ -68,7 +68,7 @@ export default function Card( props: CardProps ) {
 					width="368"
 					height="200"
 					sizes="xs:100vw sm:100vw md:400px"
-					fit="in"
+					object-fit="in"
 				/>
 			</figure>
 			<div className="text-container">

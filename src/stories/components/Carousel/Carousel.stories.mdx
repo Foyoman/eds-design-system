@@ -14,12 +14,31 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs'
 
 A Carousel
 
+export const cardProps = {
+	title: 'yes',
+	link: {
+		linktype: 'external',
+		url: 'https://www.edwardtdo.com'
+	},
+	image: {
+		filename: 'https://edwardtdo.com/static/media/machupikachu.9d9967d32e297aa9c9d6.jpg',
+		alt: 'me',
+	},
+	title: 'Edward Do',
+	overline: 'Web Developer',
+	body: 'Only the very best, with just the right amount of dirty.',
+	date: 'June 6, 1999'
+}
 export const CarouselTemplate = (args, { argTypes }) => (
 	<Carousel {...args}>
-		<Card />
-		<Card />
-		<Card />
-		<Card />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
+		<Card {...cardProps} />
 	</Carousel>
 )
 
@@ -35,8 +54,6 @@ export const CarouselTemplate = (args, { argTypes }) => (
 			},
 	  }}
 		args={{
-			heading: 'Heading',
-			subheading: 'Subheading',
 			items: [
 				{
 					name: 'Card',

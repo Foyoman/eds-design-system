@@ -67,8 +67,10 @@
 
 			.item {
 				margin: 1rem;
-				min-width: 300px;
+				// min-width: 300px;
+				width: auto;
 				scroll-snap-align: center;
+				// display: flex;
 			}
 		}
 
@@ -85,6 +87,10 @@
 			align-items: center;
 			justify-content: center;
 			color: var(--brand-navy);
+
+			svg {
+				height: 14px;
+			}
 
 			&:hover {
 				cursor: pointer;
@@ -120,7 +126,7 @@
 		}
 
 		.carousel-container {
-			.horizontal-scroll::v-deep {
+			.horizontal-scroll {
 				.item {
 					margin: var(--spacer-sm);
 					min-width: 80%;
@@ -128,11 +134,13 @@
 				&.full,
 				&.left,
 				&.right {
+					-webkit-mask-image: none;
 					mask-image: none;
 				}
 			}
 			.chevron {
-				display: none;
+				// display: none;
+				margin: 0 var(--spacer-sm);
 			}
 		}
 	}
