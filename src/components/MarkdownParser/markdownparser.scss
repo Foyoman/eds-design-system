@@ -1,9 +1,13 @@
-h1, h2, h3, h4, h5, h6 {
-	margin-left: 0 !important;
-}
+@import '../../assets/styles/global.scss';
 
-textarea {
-	width: 100%;
-	font-family: 'Fira Code', monospace;
-	padding: 16px;
+.md-parser {
+	h1, h2, h3, h4, h5, h6 {
+		margin-left: 0 !important;
+	}
+	
+	textarea {
+		width: 100%;
+		font-family: 'Fira Code', monospace;
+		padding: 16px;
+	}
 }

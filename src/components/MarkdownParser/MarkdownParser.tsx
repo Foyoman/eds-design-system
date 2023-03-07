@@ -100,7 +100,7 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	}
 	
 	return (
-		<>
+		<div className="md-parser">
 			<ReactMarkdown
 				components={MarkdownComponents}
 				// css={styleMarkdown}
@@ -108,6 +108,6 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 				{ markdown }
 			</ReactMarkdown>
 			<textarea cols={30} rows={10} onChange={handleChange} value={markdown} />
-		</>
+		</div>
 	)
 }
