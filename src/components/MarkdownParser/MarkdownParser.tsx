@@ -27,29 +27,30 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	const [markdown, setMarkdown] = useState(content);
 
 	const syntaxTheme = oneDark;
-
-	// const styleMarkdown = css({
-	// 	'.codeStyle, pre, code, code span': {
-	// 		// Your SyntaxHighlighter override styles here
-	// 	},
-	// 	code: {
-	// 	 // Your general code styles here
-	// 	},
-	// 	'pre code': {
-	// 		// Your code-block styles here
-	// 	},
-	// 	'h3 code': {
-	// 		color: 'inherit'
-	// 	},
-	// 	'span.linenumber': {
-	// 		display: 'none !important'
-	// 	},
-	// 	'[data="highlight"]': {
-	// 		// Your custom line highlight styles here
-	// 	},
-	// })
-
+	
 	const MarkdownComponents: object = {
+
+		// const styleMarkdown = css({
+		// 	'.codeStyle, pre, code, code span': {
+		// 		// Your SyntaxHighlighter override styles here
+		// 	},
+		// 	code: {
+		// 	 // Your general code styles here
+		// 	},
+		// 	'pre code': {
+		// 		// Your code-block styles here
+		// 	},
+		// 	'h3 code': {
+		// 		color: 'inherit'
+		// 	},
+		// 	'span.linenumber': {
+		// 		display: 'none !important'
+		// 	},
+		// 	'[data="highlight"]': {
+		// 		// Your custom line highlight styles here
+		// 	},
+		// })
+
 		code({ node, inline, className, ...props}) {
 			
 			const match = /language-(\w+)/.exec(className || '');
@@ -99,15 +100,13 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	
 	return (
 		<>
-			<textarea cols={30} rows={10} onChange={handleChange} value={markdown}>
-			</textarea>
-			<br />
 			<ReactMarkdown
 				components={MarkdownComponents}
 				// css={styleMarkdown}
 			>
 				{ markdown }
 			</ReactMarkdown>
+			<textarea cols={30} rows={10} onChange={handleChange} value={markdown} />
 		</>
 	)
 }
