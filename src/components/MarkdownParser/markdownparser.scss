@@ -4,8 +4,14 @@
 	h1, h2, h3, h4, h5, h6 {
 		margin-left: 0 !important;
 	}
+
+	ul, ol {
+		margin: 0;
+		padding-left: 28px;
+	}
 	
 	textarea {
+		margin-top: var(--spacer-md);
 		width: 100%;
 		font-family: 'Fira Code', monospace;
 		padding: 16px;
