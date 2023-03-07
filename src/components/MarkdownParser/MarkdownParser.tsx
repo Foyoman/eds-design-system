@@ -96,7 +96,6 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 
 	const handleChange = (e: React.FormEvent<HTMLTextAreaElement>) => {
 		const md = (e.target as HTMLTextAreaElement).value
-		console.log(md);
 		setMarkdown(md);
 	}
 	
