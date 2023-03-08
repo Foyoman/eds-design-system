@@ -47,7 +47,7 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 	}, [monaco]);
 
 	let syntaxTheme: typeof oneDark;
-	let editorTheme: string;
+	let editorTheme: "vs-dark" | "vs-light";
 	if (theme === "dark") {
 		syntaxTheme = oneDark;
 		editorTheme = 'vs-dark';
@@ -82,6 +82,12 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 				}
 			}
 
+			const style = {
+				style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' }
+			}
+
+			Object.assign(applyHighlights, style);
+
 			return match ? (
 				<SyntaxHighlighter
 					style={syntaxTheme}
@@ -89,7 +95,8 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 					PreTag="div"
 					className="codeStyle"
 					showLineNumbers={true}
-					wrapLines={hasMeta ? true : false}
+					// wrapLines={hasMeta ? true : false}
+					wrapLines={true}
 					useInlineStyles={true}
 					lineProps={applyHighlights}
 					{...props}
