@@ -24,12 +24,17 @@ $lighter-grey: #ACBAC7;
 
 	.md-container {
 		.settings-icon {
+			transition: all 0.3s;
 			position: absolute;
-			top: var(--spacer-md);
-			right: var(--spacer-md);
+			top: var(--spacer-xs);
+			left: var(--spacer-xs);
 			cursor: pointer;
+			opacity: 0.4;
 			path {
 				color: $lighter-grey;
+			}
+			&:hover {
+				opacity: 1;
 			}
 		}
 
