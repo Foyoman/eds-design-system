@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "!style-loader!css-loader!sass-loader!./markdownparser.scss"
 import '!style-loader!css-loader!sass-loader!./github.scss';
@@ -16,6 +16,7 @@ import rangeParser from "parse-numeric-range";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
+import { ReactElement } from "react-markdown/lib/react-markdown";
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -33,6 +34,7 @@ interface MarkdownParserProps {
 export default function MarkdownParser (props: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
+	const markdownEl = useRef<HTMLDivElement>(null);
 	const monaco = useMonaco();
 
 	useEffect(() => {
@@ -41,6 +43,16 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 			console.log("here is the monaco instance:", monaco);
 		}
 	}, [monaco]);
+
+	useEffect(() => {
+		const markdownBody = markdownEl.current!.childNodes[0] as HTMLDivElement;
+		const codeBlocks = markdownBody.querySelectorAll('code');
+		codeBlocks.forEach((block) => {
+			const language = block.classList.value;
+			console.log(language);
+			// block.appendChild();
+		})
+	}, [markdown]);
 
 	let syntaxTheme: typeof oneDark;
 	let editorTheme: string;
@@ -54,7 +66,7 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	
 	const MarkdownComponents: object = {
 
-		code({ node, inline, className, ...props}) {
+		code({ node, inline, className, ...props}: any) {
 			
 			const match = /language-(\w+)/.exec(className || '');
 			const hasMeta = node?.data?.meta;
@@ -64,11 +76,11 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 					const RE = /{([\d,-]+)}/;
 					const metadata = node.data.meta?.replace(/\s/g, '');
 					const strlineNumbers = RE?.test(metadata) 
-						? RE?.exec(metadata)[1] 
+						? RE.exec(metadata)![1] 
 						: '0';
 					const highlightLines = rangeParser(strlineNumbers);
 					const highlight = highlightLines;
-					const data: string = highlight.includes(applyHighlights)
+					const data: string | null = highlight.includes(applyHighlights)
 						? 'highlight'
 						: null;
 					return { data };
@@ -101,21 +113,29 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 		if (value) setMarkdown(value);
 	}
 
+	const handleText = (e: React.FormEvent<HTMLTextAreaElement>) => {
+		const md = (e.target as HTMLTextAreaElement).value;
+		console.log(md);
+		setMarkdown(md);
+	}
+
 	const options: object = {
 		selectOnLineNumbers: true,
 	}
 	
 	return (
 		<div className={`md-parser ${theme}`}>
-			<ReactMarkdown
-				components={MarkdownComponents}
-				className="markdown-body"
-			>
-				{ markdown }
-			</ReactMarkdown>
-			{/* <textarea cols={30} rows={10} onChange={handleChange} value={markdown} /> */}
+			<div ref={markdownEl}>
+				<ReactMarkdown
+					components={MarkdownComponents}
+					className="markdown-body"
+				>
+					{ markdown }
+				</ReactMarkdown>
+			</div>
+			{/* <textarea value={markdown} onChange={handleText}></textarea> */}
 			<Editor 
-				height="90vh"
+				height="50vh"
 				width="100%"
 				defaultLanguage="markdown"
 				defaultValue="// some comment"
@@ -123,6 +143,7 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 				value={markdown}
 				onChange={handleChange}
 				options={options}
+				className="md-editor"
 			/>
 		</div>
 	)

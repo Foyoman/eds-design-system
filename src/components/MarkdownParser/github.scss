@@ -832,18 +832,18 @@
   //   border-radius: 6px;
   // }
 
-  // .markdown-body pre code,
-  // .markdown-body pre tt {
-  //   display: inline;
-  //   max-width: auto;
-  //   padding: 0;
-  //   margin: 0;
-  //   overflow: visible;
-  //   line-height: inherit;
-  //   word-wrap: normal;
-  //   background-color: transparent;
-  //   border: 0;
-  // }
+  .markdown-body pre code,
+  .markdown-body pre tt {
+    display: inline;
+    max-width: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    line-height: inherit;
+    word-wrap: normal;
+    background-color: transparent;
+    border: 0;
+  }
 
   .markdown-body .csv-data td,
   .markdown-body .csv-data th {

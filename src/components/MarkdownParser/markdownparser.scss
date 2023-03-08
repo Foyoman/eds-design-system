@@ -1,6 +1,8 @@
 @import '../../assets/styles/global.scss';
 
 .md-parser {
+	height: 100vh;
+
 	h1, h2, h3, h4, h5, h6 {
 		margin-left: 0 !important;
 	}
@@ -15,5 +17,14 @@
 		width: 100%;
 		font-family: 'Fira Code', monospace;
 		padding: 16px;
+	}
+
+	.markdown-body {
+		padding: var(--spacer-xl) !important;
+	}
+
+	.monaco-editor {
+		border-top: 2px solid var(--brand-grey-dark);
+		padding: var(--spacer-xl) 0 !important;
 	}
 }

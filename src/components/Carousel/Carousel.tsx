@@ -80,7 +80,7 @@ export default function Carousel({ children, ...props }: CarouselProps) {
   };
 
   return (
-    <div className="container mds__component">
+    <div className="container eds__component">
       {items.length > 0 && (
 			<div className="carousel-container">
 				<div

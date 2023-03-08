@@ -57,7 +57,7 @@ export default function Card( props: CardProps ) {
 	}
 
 	return (
-		<div className="card mds__component">
+		<div className="card eds__component">
 			<figure className="picture">
 				<Image
 					// format="webp"

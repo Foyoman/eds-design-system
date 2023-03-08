@@ -1,8 +1,7 @@
 import '!style-loader!css-loader!sass-loader!../src/assets/styles/global.scss';
 import * as nextImage from 'next/image';
-import {
-	INITIAL_VIEWPORTS
-} from '@storybook/addon-viewport';
+import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
+import { themes } from '@storybook/theming';
 
 Object.defineProperty(nextImage, 'default', {
   configurable: true,
@@ -23,5 +22,8 @@ export const parameters = {
       color: /(background|color)$/i,
       date: /Date$/,
     },
+  },
+  docs: {
+    theme: themes.dark,
   },
 }
