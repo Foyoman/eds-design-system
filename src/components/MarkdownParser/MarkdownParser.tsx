@@ -16,7 +16,6 @@ import rangeParser from "parse-numeric-range";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
-import { ReactElement } from "react-markdown/lib/react-markdown";
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -44,16 +43,6 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 		}
 	}, [monaco]);
 
-	useEffect(() => {
-		const markdownBody = markdownEl.current!.childNodes[0] as HTMLDivElement;
-		const codeBlocks = markdownBody.querySelectorAll('code');
-		codeBlocks.forEach((block) => {
-			const language = block.classList.value;
-			console.log(language);
-			// block.appendChild();
-		})
-	}, [markdown]);
-
 	let syntaxTheme: typeof oneDark;
 	let editorTheme: string;
 	if (theme === "dark") {
@@ -66,7 +55,8 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	
 	const MarkdownComponents: object = {
 
-		code({ node, inline, className, ...props}: any) {
+		code({ node, inline, className, children, ...props}: any) {
+			const code = String(children).replace(/\n$/, "")
 			
 			const match = /language-(\w+)/.exec(className || '');
 			const hasMeta = node?.data?.meta;
@@ -100,7 +90,9 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 					useInlineStyles={true}
 					lineProps={applyHighlights}
 					{...props}
-				/>
+				>
+					{code}
+				</SyntaxHighlighter>
 			) : (
 				<code className={className} {...props} />
 			)
@@ -133,7 +125,6 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 					{ markdown }
 				</ReactMarkdown>
 			</div>
-			{/* <textarea value={markdown} onChange={handleText}></textarea> */}
 			<div className="editor-container">
 				<Editor 
 					height="100%"

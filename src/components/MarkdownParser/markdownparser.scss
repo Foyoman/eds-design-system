@@ -24,9 +24,47 @@
 		// flex: 1 1 auto;
 		height: 50%;
 		.markdown-body {
+			overflow-y: auto;
 			height: 100%;
 			// flex: 1 1 auto !important;
 			padding: var(--spacer-xl) !important;
+
+			pre {
+				.codeStyle {
+					position: relative;
+
+					code {
+						&::before {
+							position: absolute;
+							top: var(--spacer-xxs);
+							right: var(--spacer-xs);
+						}
+
+						.linenumber {
+							font-style: normal !important;
+						}
+
+						&.language-tsx {
+							&::before {
+								content: 'TypeScript';
+							}
+						}
+
+						&.language-py {
+							&::before {
+								content: 'Python';
+							}
+						}
+
+						&.language-scss {
+							&::before {
+								content: 'SCSS';
+							}
+						}
+					}
+
+				}
+			}
 		}
 	}
 
