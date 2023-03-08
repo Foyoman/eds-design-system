@@ -36,6 +36,7 @@ interface MarkdownParserProps {
 export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
+	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
 	const monaco = useMonaco();
 
@@ -117,18 +118,37 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 	}
 
 	const handleChange = (value: string | undefined, e: React.SyntheticEvent) => {
-		console.log(value);
-		console.log(e);
+		// console.log(value);
+		// console.log(e);
 		if (value) setMarkdown(value);
 	}
+
+	useEffect(() => {
+		if (!componentEl) {
+			const component = document.getElementById('md-parser');
+			setComponentEl(component);
+		} else {
+			const gutter = componentEl.querySelector('.gutter');
+			console.log(gutter);
+			console.log('adjusting classes:')
+			if (splitDirection === "horizontal") {
+				gutter?.classList.remove('gutter-vertical');
+				gutter?.classList.add('gutter-horizontal');
+			} else {
+				gutter?.classList.remove('gutter-horizontal');
+				gutter?.classList.add('gutter-vertical');
+			}
+		}
+	}, [componentEl, splitDirection]);
 	
 	return (
 		<Split 
-		direction={splitDirection} 
-		className={`md-parser ${theme}`}
-		style={{
-			flexDirection: splitDirection === 'horizontal' ? 'row' : 'column'
-		}}
+			direction={splitDirection} 
+			className={`md-parser ${theme}`}
+			id="md-parser"
+			style={{
+				flexDirection: splitDirection === 'horizontal' ? 'row' : 'column'
+			}}
 		>
 			<div 
 				ref={markdownEl} 

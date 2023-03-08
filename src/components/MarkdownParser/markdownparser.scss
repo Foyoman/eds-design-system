@@ -92,11 +92,15 @@ $lighter-grey: #ACBAC7;
 		background-position: 50%;
 
 		&.gutter-horizontal {
+			width: 10px !important;
+			height: auto !important;
 			background-image: url("../../assets/images/horizontal-gutter.png");
 			cursor: col-resize;
 		}
 
 		&.gutter-vertical {
+			height: 10px !important;
+			width: auto !important;
 			background-image: url("../../assets/images/vertical-gutter.png");
 			cursor: row-resize;
 		}
