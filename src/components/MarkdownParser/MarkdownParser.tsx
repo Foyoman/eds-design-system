@@ -97,7 +97,9 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 					{code}
 				</SyntaxHighlighter>
 			) : (
-				<code className={className} {...props} />
+				<code className={className} {...props}> 
+					{children}
+				</code>
 			)
 		},
 	}

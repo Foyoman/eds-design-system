@@ -48,6 +48,11 @@ $lighter-grey: #ACBAC7;
 					position: relative;
 
 					code {
+						.linenumber {
+							font-style: normal !important;
+							max-width: 3.25rem !important;
+						}
+
 						&::before {
 							position: absolute;
 							top: var(--spacer-xxs);
@@ -55,26 +60,24 @@ $lighter-grey: #ACBAC7;
 							opacity: 0.6;
 						}
 
-						.linenumber {
-							font-style: normal !important;
+						&.language-ts:before {
+							content: 'TypeScript';
 						}
 
-						&.language-tsx {
-							&::before {
-								content: 'TypeScript';
-							}
+						&.language-tsx:before {
+							content: 'TSX';
 						}
 
-						&.language-py {
-							&::before {
-								content: 'Python';
-							}
+						&.language-py:before {
+							content: 'Python';
 						}
 
-						&.language-scss {
-							&::before {
-								content: 'SCSS';
-							}
+						&.language-scss:before {
+							content: 'SCSS';
+						}
+
+						&.language-shell:before {
+							content: 'Shell';
 						}
 					}
 
