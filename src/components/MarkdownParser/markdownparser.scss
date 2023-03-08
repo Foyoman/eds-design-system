@@ -1,5 +1,8 @@
 .md-parser {
 	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	// overflow: hidden;
 
 	h1, h2, h3, h4, h5, h6 {
 		margin-left: 0 !important;
@@ -17,12 +20,23 @@
 		padding: 16px;
 	}
 
-	.markdown-body {
-		padding: var(--spacer-xl) !important;
+	.md-container {
+		// flex: 1 1 auto;
+		height: 50%;
+		.markdown-body {
+			height: 100%;
+			// flex: 1 1 auto !important;
+			padding: var(--spacer-xl) !important;
+		}
 	}
 
-	.monaco-editor {
-		border-top: 2px solid var(--brand-grey-dark);
-		padding: var(--spacer-xl) 0 !important;
+	.editor-container {
+		height: 50%;
+		padding-top: var(--spacer-xl) !important;
+		background-color: #1E1E1E;
+		.monaco-editor {
+			// flex: 1 1 auto !important;
+			// border-top: 2px solid var(--brand-grey-dark);
+		}
 	}
 }

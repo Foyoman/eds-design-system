@@ -125,7 +125,7 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 	
 	return (
 		<div className={`md-parser ${theme}`}>
-			<div ref={markdownEl}>
+			<div ref={markdownEl} className="md-container">
 				<ReactMarkdown
 					components={MarkdownComponents}
 					className="markdown-body"
@@ -134,17 +134,19 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 				</ReactMarkdown>
 			</div>
 			{/* <textarea value={markdown} onChange={handleText}></textarea> */}
-			<Editor 
-				height="50vh"
-				width="100%"
-				defaultLanguage="markdown"
-				defaultValue="// some comment"
-				theme={editorTheme}
-				value={markdown}
-				onChange={handleChange}
-				options={options}
-				className="md-editor"
-			/>
+			<div className="editor-container">
+				<Editor 
+					height="100%"
+					width="100%"
+					defaultLanguage="markdown"
+					defaultValue="// some comment"
+					theme={editorTheme}
+					value={markdown}
+					onChange={handleChange}
+					options={options}
+					className="md-editor"
+				/>
+			</div>
 		</div>
 	)
 }
