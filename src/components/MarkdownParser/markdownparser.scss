@@ -1,8 +1,10 @@
+$neutral-grey: #444C56;
+$lighter-grey: #ACBAC7;
+
 .md-parser {
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
-	// overflow: hidden;
 
 	h1, h2, h3, h4, h5, h6 {
 		margin-left: 0 !important;
@@ -21,12 +23,19 @@
 	}
 
 	.md-container {
-		// flex: 1 1 auto;
-		height: 50%;
+		.settings-icon {
+			position: absolute;
+			top: var(--spacer-md);
+			right: var(--spacer-md);
+			cursor: pointer;
+			path {
+				color: $lighter-grey;
+			}
+		}
+
 		.markdown-body {
 			overflow-y: auto;
 			height: 100%;
-			// flex: 1 1 auto !important;
 			padding: var(--spacer-xl) !important;
 
 			pre {
@@ -68,13 +77,24 @@
 		}
 	}
 
+	.gutter {
+		background-color: $neutral-grey;
+		background-repeat: no-repeat;
+		background-position: 50%;
+
+		&.gutter-horizontal {
+			background-image: url("../../assets/images/horizontal-gutter.png");
+			cursor: col-resize;
+		}
+
+		&.gutter-vertical {
+			background-image: url("../../assets/images/vertical-gutter.png");
+			cursor: row-resize;
+		}
+	}
+
 	.editor-container {
-		height: 50%;
 		padding-top: var(--spacer-xl) !important;
 		background-color: #1E1E1E;
-		.monaco-editor {
-			// flex: 1 1 auto !important;
-			// border-top: 2px solid var(--brand-grey-dark);
-		}
 	}
 }

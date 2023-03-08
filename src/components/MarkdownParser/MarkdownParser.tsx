@@ -16,6 +16,8 @@ import rangeParser from "parse-numeric-range";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
+import Split from "react-split";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -28,9 +30,10 @@ SyntaxHighlighter.registerLanguage('json', json);
 interface MarkdownParserProps {
 	content: string;
 	theme: string;
+	splitDirection: "vertical" | "horizontal" | undefined;
 }
 
-export default function MarkdownParser (props: MarkdownParserProps) {
+export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const markdownEl = useRef<HTMLDivElement>(null);
@@ -98,26 +101,35 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 			)
 		},
 	}
+	
+	const options: object = {
+		selectOnLineNumbers: true,
+		wordWrap: true,
+	}
 
 	const handleChange = (value: string | undefined, e: React.SyntheticEvent) => {
 		console.log(value);
 		console.log(e);
 		if (value) setMarkdown(value);
 	}
-
-	const handleText = (e: React.FormEvent<HTMLTextAreaElement>) => {
-		const md = (e.target as HTMLTextAreaElement).value;
-		console.log(md);
-		setMarkdown(md);
-	}
-
-	const options: object = {
-		selectOnLineNumbers: true,
-	}
 	
 	return (
-		<div className={`md-parser ${theme}`}>
-			<div ref={markdownEl} className="md-container">
+		<Split 
+		direction={splitDirection} 
+		className={`md-parser ${theme}`}
+		style={{
+			flexDirection: splitDirection === 'horizontal' ? 'row' : 'column'
+		}}
+		>
+			<div 
+				ref={markdownEl} 
+				className="md-container"
+				style={{ 
+					height: splitDirection === 'horizontal' ? '100%' : '',
+					width: splitDirection === 'horizontal' ? '' : '100%'
+				}}
+			>
+				<SettingsIcon className="settings-icon" />
 				<ReactMarkdown
 					components={MarkdownComponents}
 					className="markdown-body"
@@ -125,7 +137,13 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 					{ markdown }
 				</ReactMarkdown>
 			</div>
-			<div className="editor-container">
+			<div 
+				className="editor-container" 
+				style={{ 
+					height: splitDirection === 'horizontal' ? '100%' : '',
+					width: splitDirection === 'horizontal' ? '' : '100%'
+				}}
+			>
 				<Editor 
 					height="100%"
 					width="100%"
@@ -138,6 +156,6 @@ export default function MarkdownParser (props: MarkdownParserProps) {
 					className="md-editor"
 				/>
 			</div>
-		</div>
+		</Split>
 	)
 }
