@@ -18,7 +18,7 @@ import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/pris
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import Split from "react-split";
-import SettingsIcon from '@mui/icons-material/Settings';
+// import SettingsIcon from '@mui/icons-material/Settings';
 
 SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -28,34 +28,15 @@ SyntaxHighlighter.registerLanguage('bash', bash);
 SyntaxHighlighter.registerLanguage('markdown', markdown);
 SyntaxHighlighter.registerLanguage('json', json);
 
-interface MarkdownParserProps {
-	content: string;
-	theme: string;
-	splitDirection: "vertical" | "horizontal" | undefined;
+
+// Markdown Preview Component
+
+interface MarkdownPreviewProps {
+	markdown: string | undefined;
+	theme: typeof oneDark | "vs-light" | "vs-dark";
 }
 
-export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
-	const { content, theme } = props;
-	const [markdown, setMarkdown] = useState(content);
-	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
-	const markdownEl = useRef<HTMLDivElement>(null);
-	const monaco = useMonaco();
-
-	// no clue what this does
-	useEffect(() => {
-		monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-	}, [monaco]);
-
-	// markdown and editor theming
-	let syntaxTheme: typeof oneDark;
-	let editorTheme: "vs-dark" | "vs-light";
-	if (theme === "dark") {
-		syntaxTheme = oneDark;
-		editorTheme = 'vs-dark';
-	} else {
-		syntaxTheme = oneLight;
-		editorTheme = 'vs-light';
-	}
+function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
 	
 	// syntax highlighter configuration for react-markdown
 	const MemoizedMarkdownComponents = useMemo(() => {
@@ -65,43 +46,43 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 				
 				const match = /language-(\w+)/.exec(className || '');
 				const hasMeta = node?.data?.meta;
-	
+				
 				const applyHighlights: object = (applyHighlights: number) => {
 					if (hasMeta) {
 						const RE = /{([\d,-]+)}/;
 						const metadata = node.data.meta?.replace(/\s/g, '');
 						const strlineNumbers = RE?.test(metadata) 
-							? RE.exec(metadata)![1] 
-							: '0';
+						? RE.exec(metadata)![1] 
+						: '0';
 						const highlightLines = rangeParser(strlineNumbers);
 						const highlight = highlightLines;
 						const data: string | null = highlight.includes(applyHighlights)
-							? 'highlight'
-							: null;
+						? 'highlight'
+						: null;
 						return { data };
 					} else {
 						return {};
 					}
 				}
-	
+				
 				const style = {
 					style: { wordBreak: 'break-all', whiteSpace: 'pre-wrap' }
 				}
-	
+				
 				Object.assign(applyHighlights, style);
-	
+				
 				return match ? (
 					<SyntaxHighlighter
-						style={syntaxTheme}
-						language={match[1]}
-						PreTag="div"
-						className="codeStyle"
-						showLineNumbers={true}
-						// wrapLines={hasMeta ? true : false}
-						wrapLines={true}
-						useInlineStyles={true}
-						lineProps={applyHighlights}
-						{...props}
+					style={theme}
+					language={match[1]}
+					PreTag="div"
+					className="codeStyle"
+					showLineNumbers={true}
+					wrapLines={hasMeta ? true : false}
+					// wrapLines={true}
+					useInlineStyles={true}
+					lineProps={applyHighlights}
+					{...props}
 					>
 						{code}
 					</SyntaxHighlighter>
@@ -112,26 +93,106 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 				)
 			},
 		};
-	}, [syntaxTheme]);
+	}, [theme]);
 	
-	// monaco editor options
-	const editorOptions = useMemo(() => {
-		return {
-			selectOnLineNumbers: true,
-			wordWrap: true,
-		}
-	}, [])
+	const MemoizedMarkdown = useMemo(() => {
+    return (
+			<ReactMarkdown
+				components={MemoizedMarkdownComponents}
+				className="markdown-body"
+			>
+				{ markdown || "" }
+			</ReactMarkdown>
+		)
+  }, [MemoizedMarkdownComponents, markdown]);
+
+	return MemoizedMarkdown;
+}
+
+// Editor Component
+
+interface EditorProps {
+	content: string | undefined;
+	theme: "vs-dark" | "vs-light" | undefined;
+	onChange: (value: string) => void;
+}
+
+function EditorComponent({ content, theme, onChange }: EditorProps) {
+	const monaco = useMonaco();
+
+	// no clue what this does
+	useEffect(() => {
+		monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
+	}, [monaco]);
 
 	const debouncedSetMarkdown = debounce((value: string) => {
-		setMarkdown(value);
-	}, 500);
+		onChange(value);
+	}, 250);
 
 	// handle monaco editor changes
-	const handleChange = useMemo(() => { 
-		return (value: string | undefined, e: React.SyntheticEvent) => {
-			if (value) debouncedSetMarkdown(value);
+	const handleInputChange = useMemo(() => { 
+		return (value: string | undefined) => {
+			if (value) {
+				if (value.length > 5000) {
+					debouncedSetMarkdown(value);
+				} else {
+					onChange(value);
+				}
+			}
 		};
-	}, [debouncedSetMarkdown]);
+	}, [debouncedSetMarkdown, onChange]);
+
+	const MemoizedEditor = useMemo(() => {
+		return (
+			<Editor 
+				height="100%"
+				width="100%"
+				defaultLanguage="markdown"
+				defaultValue=""
+				theme={theme}
+				value={content}
+				onChange={handleInputChange}
+				options={{
+					selectOnLineNumbers: true,
+					wordWrap: true,
+				}}
+				className="md-editor"
+			/>
+		)
+	}, [content, handleInputChange, theme]);
+
+	return MemoizedEditor;
+}
+
+
+// Full Parent Component
+
+interface MarkdownParserProps {
+	content: string | undefined;
+	theme: "light" | "dark" | undefined;
+	splitDirection: "vertical" | "horizontal" | undefined;
+}
+
+export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
+	const { content, theme } = props;
+	const [markdown, setMarkdown] = useState(content);
+	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
+	const markdownEl = useRef<HTMLDivElement>(null);
+
+	const handleEditorChange = (value: string) => {
+		setMarkdown(value);
+	}
+
+	// markdown and editor theming
+	let markdownTheme: typeof oneDark;
+	let editorTheme: "vs-dark" | "vs-light";
+	if (theme === "dark") {
+		markdownTheme = oneDark;
+		editorTheme = 'vs-dark';
+	} else {
+		markdownTheme = oneLight;
+		editorTheme = 'vs-light';
+	}
 
 	// adjust the resize bar's classes according to split direction
 	useEffect(() => {
@@ -168,14 +229,8 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 					height: splitDirection === 'horizontal' ? '100%' : '',
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
-			>
-				<SettingsIcon className="settings-icon" />
-				<ReactMarkdown
-					components={MemoizedMarkdownComponents}
-					className="markdown-body"
 				>
-					{ markdown }
-				</ReactMarkdown>
+				<MarkdownPreview markdown={markdown} theme={markdownTheme} />
 			</div>
 			<div 
 				className="editor-container" 
@@ -184,17 +239,7 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
 			>
-				<Editor 
-					height="100%"
-					width="100%"
-					defaultLanguage="markdown"
-					defaultValue="// some comment"
-					theme={editorTheme}
-					value={markdown}
-					onChange={handleChange}
-					options={editorOptions}
-					className="md-editor"
-				/>
+				<EditorComponent content={content} theme={editorTheme} onChange={handleEditorChange} />
 			</div>
 		</Split>
 	)
