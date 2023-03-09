@@ -78,8 +78,8 @@ function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
 					PreTag="div"
 					className="codeStyle"
 					showLineNumbers={true}
-					// wrapLines={hasMeta ? true : false}
-					wrapLines={true}
+					wrapLines={hasMeta ? true : false}
+					// wrapLines={true}
 					useInlineStyles={true}
 					lineProps={applyHighlights}
 					{...props}
@@ -99,8 +99,8 @@ function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
 		<ReactMarkdown
 			components={MemoizedMarkdownComponents}
 			className="markdown-body"
-			>
-			{ markdown }
+		>
+			{ markdown || "" }
 		</ReactMarkdown>
 	)
 }
@@ -127,18 +127,17 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
-		return (value: string | undefined, e: React.SyntheticEvent) => {
+		return (value: string | undefined) => {
 			if (value) debouncedSetMarkdown(value);
 		};
 	}, [debouncedSetMarkdown]);
-
 
 	return (
 		<Editor 
 			height="100%"
 			width="100%"
 			defaultLanguage="markdown"
-			defaultValue="// some comment"
+			defaultValue=""
 			theme={theme}
 			value={content}
 			onChange={handleInputChange}
@@ -155,7 +154,7 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 // Full Parent Component
 
 interface MarkdownParserProps {
-	content: string;
+	content: string | undefined;
 	theme: "light" | "dark" | undefined;
 	splitDirection: "vertical" | "horizontal" | undefined;
 }
@@ -163,10 +162,8 @@ interface MarkdownParserProps {
 export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
-	// const [editorContent] = useState(content);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
-
 
 	const handleEditorChange = (value: string) => {
 		setMarkdown(value);
