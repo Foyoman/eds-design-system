@@ -138,6 +138,8 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 				} else {
 					onChange(value);
 				}
+			} else {
+				onChange("");
 			}
 		};
 	}, [debouncedSetMarkdown, onChange]);
