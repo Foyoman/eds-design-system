@@ -73,16 +73,16 @@ function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
 				
 				return match ? (
 					<SyntaxHighlighter
-					style={theme}
-					language={match[1]}
-					PreTag="div"
-					className="codeStyle"
-					showLineNumbers={true}
-					wrapLines={hasMeta ? true : false}
-					// wrapLines={true}
-					useInlineStyles={true}
-					lineProps={applyHighlights}
-					{...props}
+						style={theme}
+						language={match[1]}
+						PreTag="div"
+						className="codeStyle"
+						showLineNumbers={true}
+						wrapLines={hasMeta ? true : false}
+						// wrapLines={true}
+						useInlineStyles={true}
+						lineProps={applyHighlights}
+						{...props}
 					>
 						{code}
 					</SyntaxHighlighter>
@@ -127,7 +127,7 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 
 	const debouncedSetMarkdown = debounce((value: string) => {
 		onChange(value);
-	}, 250);
+	}, 500);
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
@@ -173,7 +173,7 @@ interface MarkdownParserProps {
 	splitDirection: "vertical" | "horizontal" | undefined;
 }
 
-function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
+const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) => {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
