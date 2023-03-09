@@ -173,7 +173,7 @@ interface MarkdownParserProps {
 	splitDirection: "vertical" | "horizontal" | undefined;
 }
 
-export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
+function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
@@ -244,3 +244,5 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 		</Split>
 	)
 }
+
+export default React.memo(MarkdownParser);
