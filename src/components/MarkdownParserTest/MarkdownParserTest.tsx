@@ -163,6 +163,7 @@ interface MarkdownParserProps {
 export default function MarkdownParser ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) {
 	const { content, theme } = props;
 	const [markdown, setMarkdown] = useState(content);
+	// const [editorContent] = useState(content);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
 
@@ -227,7 +228,7 @@ export default function MarkdownParser ({ splitDirection = 'vertical', ...props 
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
 			>
-				<EditorComponent content={markdown} theme={editorTheme} onChange={handleEditorChange} />
+				<EditorComponent content={content} theme={editorTheme} onChange={handleEditorChange} />
 			</div>
 		</Split>
 	)
