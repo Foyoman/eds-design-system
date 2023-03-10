@@ -28,9 +28,9 @@ $lighter-grey: #ACBAC7;
 			padding: var(--spacer-xl) !important;
 
 			pre {
-				.codeStyle {
-					position: relative;
+				position: relative;
 
+				.codeStyle {
 					code {
 						.linenumber {
 							font-style: normal !important;
@@ -42,6 +42,15 @@ $lighter-grey: #ACBAC7;
 							top: var(--spacer-xxs);
 							right: var(--spacer-xs);
 							opacity: 0.6;
+							font-size: var(--text-xs);
+						}
+
+						&.language-js:before {
+							content: 'JavaScript';
+						}
+
+						&.language-jsx:before {
+							content: 'JSX';
 						}
 
 						&.language-ts:before {
@@ -56,8 +65,28 @@ $lighter-grey: #ACBAC7;
 							content: 'Python';
 						}
 
+						&.language-java:before {
+							content: 'Java';
+						}
+
+						&.language-c:before {
+							content: 'C';
+						}
+
+						&.language-cpp:before {
+							content: 'C++';
+						}
+
+						&.language-csharp:before {
+							content: 'C#';
+						}
+
 						&.language-scss:before {
 							content: 'SCSS';
+						}
+
+						&.language-md:before {
+							content: 'Markdown';
 						}
 
 						&.language-shell:before {
