@@ -39,4 +39,4 @@ next-env.d.ts
 .netlify
 
 # storybook
-storybook-static
+/storybook-static
