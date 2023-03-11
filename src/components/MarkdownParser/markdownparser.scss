@@ -2,6 +2,8 @@ $neutral-grey: #444C56;
 $lighter-grey: #ACBAC7;
 
 @mixin icon {
+	position: absolute;
+	color: $lighter-grey;
 	cursor: pointer;
 	transition: all .2s;
 	opacity: .6;
@@ -22,16 +24,12 @@ $lighter-grey: #ACBAC7;
 
 		.split-icon {
 			@include icon;
-			position: absolute;
 			top: var(--spacer-xxs);
 			left: var(--spacer-xxs);
-			color: $lighter-grey;
 		}
 
 		.collapse-tab {
 			@include icon;
-			position: absolute;
-			color: $lighter-grey;
 			
 			&.vertical {
 				left: var(--spacer-xxs);
@@ -71,21 +69,6 @@ $lighter-grey: #ACBAC7;
 	}
 
 	.md-preview {
-		.settings-icon {
-			transition: all 0.3s;
-			position: absolute;
-			top: var(--spacer-xs);
-			left: var(--spacer-xs);
-			cursor: pointer;
-			opacity: 0.4;
-			path {
-				color: $lighter-grey;
-			}
-			&:hover {
-				opacity: 1;
-			}
-		}
-
 		.markdown-body {
 			overflow-y: auto;
 			height: 100%;
