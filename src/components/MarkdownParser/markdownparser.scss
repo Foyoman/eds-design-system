@@ -169,8 +169,8 @@ $lighter-grey: #ACBAC7;
 	.md-editor {
 		background-color: #1E1E1E;
 
-		.monaco-editor {
-			padding-top: var(--spacer-xl) !important;
+		.padding {
+			height: var(--spacer-xl);
 		}
 	}
 }

@@ -307,6 +307,7 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					width: split === 'horizontal' ? '' : '100%'
 				}}
 			>
+				<div className="padding" />
 				<MarkdownEditor 
 					content={content} 
 					theme={editorTheme} 
