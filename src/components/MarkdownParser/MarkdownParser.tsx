@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { debounce, throttle } from "lodash";
+import { debounce } from "lodash";
 
 import "!style-loader!css-loader!sass-loader!./markdownparser.scss"
 import '!style-loader!css-loader!sass-loader!./github.scss';
