@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo } from "react";
-import { debounce } from "lodash";
+import { debounce, throttle } from "lodash";
 
 import "!style-loader!css-loader!sass-loader!./markdownparser.scss"
 import '!style-loader!css-loader!sass-loader!./github.scss';
@@ -49,12 +49,11 @@ SyntaxHighlighter.registerLanguage('bash', bash);
 // Markdown Preview Component
 
 interface PreviewProps {
-	markdown: string | undefined;
+	content: string | undefined;
 	theme: typeof oneDark | "vs-light" | "vs-dark";
 }
 
-function MarkdownPreview({ markdown, theme }: PreviewProps) {
-	
+function MarkdownPreview({ content, theme }: PreviewProps) {
 	// syntax highlighter configuration for react-markdown
 	const MemoizedMarkdownComponents = useMemo(() => {
 		return {
@@ -118,10 +117,10 @@ function MarkdownPreview({ markdown, theme }: PreviewProps) {
 				components={MemoizedMarkdownComponents}
 				className="markdown-body"
 			>
-				{ markdown || "" }
+				{ content || "" }
 			</ReactMarkdown>
 		)
-  }, [MemoizedMarkdownComponents, markdown]);
+  }, [MemoizedMarkdownComponents, content]);
 
 	return MemoizedMarkdown;
 }
@@ -132,9 +131,11 @@ interface EditorProps {
 	content: string | undefined;
 	theme: "vs-dark" | "vs-light" | undefined;
 	updateMarkdown: (value: string) => void;
+	triggerSave: (value: string) => void;
 }
 
-function MarkdownEditor({ content, theme, updateMarkdown }: EditorProps) {
+function MarkdownEditor(props: EditorProps) {
+	const { content, theme, updateMarkdown, triggerSave } = props;
 	const monaco = useMonaco();
 
 	// no clue what this does
@@ -144,8 +145,14 @@ function MarkdownEditor({ content, theme, updateMarkdown }: EditorProps) {
 
 	// debounce updating markdown to improve performance
 	const debouncedSetMarkdown = debounce((value: string) => {
+		console.log('running debounced set markdown...')
 		updateMarkdown(value);
 	}, 500);
+
+	const saveTrigger = throttle((value: string) => {
+		console.log('triggering auto save...');
+		triggerSave(value);
+	}, 10000);
 
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
@@ -153,14 +160,17 @@ function MarkdownEditor({ content, theme, updateMarkdown }: EditorProps) {
 			if (value) {
 				if (value.length > 5000) {
 					debouncedSetMarkdown(value);
+					saveTrigger('no');
 				} else {
 					updateMarkdown(value);
+					// saveTrigger('no');
 				}
 			} else {
 				updateMarkdown("");
+				// saveTrigger('no');
 			}
 		};
-	}, [debouncedSetMarkdown, updateMarkdown]);
+	}, [debouncedSetMarkdown, saveTrigger, updateMarkdown]);
 
 	const MemoizedEditor = useMemo(() => {
 		return (
@@ -195,8 +205,17 @@ interface MarkdownParserProps {
 	autoSaveTime?: number;
 }
 
-const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) => {
-	const { content, theme, updateSaveState, autoSaveTime } = props;
+const MarkdownParser = ({ 
+	content = "",
+	theme = 'dark',
+	splitDirection = 'vertical',
+	updateSaveState = (value: string) => {
+		console.log('updating save state...');
+	},
+	autoSaveTime = 5000,
+	// ...props 
+}: MarkdownParserProps) => {
+	// const { updateSaveState, autoSaveTime } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const [split, setSplit] = useState(splitDirection);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
@@ -206,35 +225,26 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 	// handle change from child editor component
 	const handleEditorChange = (value: string) => {
 		setMarkdown(value);
+		// debouncedSave('yo');
 	}
 
-	// pass current value of markdown to parent component
-	const autoSave = (contentToSave: string) => {
-		if (!updateSaveState) return;
-		setTimeout(() => {
-			updateSaveState(contentToSave);
-		}, autoSaveTime);
+	const handleSaveTrigger = (value: string) => {
+		updateSaveState('yo');
 	}
 
-	// debounce auto saving
-	const debouncedSave = debounce((value: string) => {
-		autoSave(value);
-	}, 500);
-
-	// trigger debouncedSave when markdown is updated
-	useEffect(() => {
-		if (markdown) debouncedSave(markdown);
-	}, [debouncedSave, markdown])
+	const debouncedSave = throttle((value: string) => {
+		updateSaveState('yo');
+	}, 10000)
 
 	// markdown and editor theming
 	let markdownTheme: typeof oneDark;
 	let editorTheme: "vs-dark" | "vs-light";
-	if (theme === "dark") {
-		markdownTheme = oneDark;
-		editorTheme = 'vs-dark';
-	} else {
+	if (theme === "light") {
 		markdownTheme = oneLight;
 		editorTheme = 'vs-light';
+	} else {
+		markdownTheme = oneDark;
+		editorTheme = 'vs-dark';
 	}
 
 	// adjust the resize bar's classes according to split direction
@@ -277,7 +287,10 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					width: split === 'horizontal' ? '' : '100%'
 				}}
 			>
-				<MarkdownPreview markdown={markdown} theme={markdownTheme} />
+				<MarkdownPreview 
+					content={markdown} 
+					theme={markdownTheme} 
+				/>
 				{ split === "horizontal" ?
 				<HorizontalSplitIcon 
 					className="split-icon" 
@@ -312,6 +325,7 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					content={content} 
 					theme={editorTheme} 
 					updateMarkdown={handleEditorChange} 
+					triggerSave={debouncedSave}
 				/>
 				<KeyboardTab 
 					className={`
