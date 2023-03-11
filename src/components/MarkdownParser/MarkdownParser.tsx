@@ -44,12 +44,12 @@ SyntaxHighlighter.registerLanguage('bash', bash);
 
 // Markdown Preview Component
 
-interface MarkdownPreviewProps {
+interface PreviewProps {
 	markdown: string | undefined;
 	theme: typeof oneDark | "vs-light" | "vs-dark";
 }
 
-function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
+function MarkdownPreview({ markdown, theme }: PreviewProps) {
 	
 	// syntax highlighter configuration for react-markdown
 	const MemoizedMarkdownComponents = useMemo(() => {
@@ -130,7 +130,7 @@ interface EditorProps {
 	updateMarkdown: (value: string) => void;
 }
 
-function EditorComponent({ content, theme, updateMarkdown }: EditorProps) {
+function MarkdownEditor({ content, theme, updateMarkdown }: EditorProps) {
 	const monaco = useMonaco();
 
 	// no clue what this does
@@ -138,6 +138,7 @@ function EditorComponent({ content, theme, updateMarkdown }: EditorProps) {
 		monaco?.languages.typescript.javascriptDefaults.setEagerModelSync(true);
 	}, [monaco]);
 
+	// debounce updating markdown to improve performance
 	const debouncedSetMarkdown = debounce((value: string) => {
 		updateMarkdown(value);
 	}, 500);
@@ -183,20 +184,41 @@ function EditorComponent({ content, theme, updateMarkdown }: EditorProps) {
 // Full Parent Component
 
 interface MarkdownParserProps {
-	content: string | undefined;
-	theme: "light" | "dark" | undefined;
-	splitDirection: "vertical" | "horizontal" | undefined;
+	content?: string;
+	theme?: "light" | "dark" | undefined;
+	splitDirection?: "vertical" | "horizontal" | undefined;
+	updateSaveState?: (value: string) => void;
+	autoSaveTime?: number;
 }
 
 const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) => {
-	const { content, theme } = props;
+	const { content, theme, updateSaveState, autoSaveTime } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
 
+	// handle change from child editor component
 	const handleEditorChange = (value: string) => {
 		setMarkdown(value);
 	}
+
+	// pass current value of markdown to parent component
+	const autoSave = (contentToSave: string) => {
+		if (!updateSaveState) return;
+		setTimeout(() => {
+			updateSaveState(contentToSave);
+		}, autoSaveTime);
+	}
+
+	// debounce auto saving
+	const debouncedSave = debounce((value: string) => {
+		autoSave(value);
+	}, 500);
+
+	// trigger debouncedSave when markdown is updated
+	useEffect(() => {
+		if (markdown) debouncedSave(markdown);
+	}, [debouncedSave, markdown])
 
 	// markdown and editor theming
 	let markdownTheme: typeof oneDark;
@@ -254,7 +276,7 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
 			>
-				<EditorComponent 
+				<MarkdownEditor 
 					content={content} 
 					theme={editorTheme} 
 					updateMarkdown={handleEditorChange} 
