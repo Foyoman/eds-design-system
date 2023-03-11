@@ -206,7 +206,9 @@ const MarkdownParser = ({
 }: MarkdownParserProps) => {
 	// const { updateSaveState } = props;
 	const [markdown, setMarkdown] = useState(content);
+	const [saved, setSaved] = useState(true);
 	const [split, setSplit] = useState(splitDirection);
+	const [lastEditTime, setLastEditTime] = useState(0);
 	const [collapsedIndex, setCollapsedIndex] = useState<number>();
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
@@ -214,7 +216,26 @@ const MarkdownParser = ({
 	// handle change from child editor component
 	const handleEditorChange = (value: string) => {
 		setMarkdown(value);
+		setLastEditTime(Date.now());
+		setSaved(false);
 	}
+
+	// trigger autosave after 3 seconds of inactivity
+	useEffect(() => {
+		if (saved) return;
+		const timeout = setTimeout(() => {
+			const now = Date.now();
+			const timeSinceLastEdit = now - lastEditTime;
+			if(timeSinceLastEdit >= 3000) {
+				updateSaveState('yo');
+				setSaved(true);
+			}
+		}, 5000);
+
+		return () => {
+			clearTimeout(timeout);
+		};
+	}, [lastEditTime, saved, updateSaveState]);
 
 	// markdown and editor theming
 	let markdownTheme: typeof oneDark;
