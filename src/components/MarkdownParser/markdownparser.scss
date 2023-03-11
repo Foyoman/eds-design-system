@@ -1,12 +1,76 @@
 $neutral-grey: #444C56;
 $lighter-grey: #ACBAC7;
 
+@mixin icon {
+	cursor: pointer;
+	transition: all .2s;
+	opacity: .6;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+
 .md-parser {
 	height: 100vh;
 	display: flex;
 	flex-direction: column;
 
-	.md-container {
+	.component {
+		overflow: hidden;
+		position: relative;
+
+		.split-icon {
+			@include icon;
+			position: absolute;
+			top: var(--spacer-xxs);
+			left: var(--spacer-xxs);
+			color: $lighter-grey;
+		}
+
+		.collapse-tab {
+			@include icon;
+			position: absolute;
+			color: $lighter-grey;
+			
+			&.vertical {
+				left: var(--spacer-xxs);
+			}
+			
+			&.horizontal {
+				top: var(--spacer-xxs);
+			}
+		}
+
+		&.md-preview {
+			.collapse-tab {
+				&.horizontal {
+					right: var(--spacer-lg);
+					transform: rotate(180deg);
+				}
+
+				&.vertical {
+					bottom: var(--spacer-xxs);
+					transform: rotate(-90deg);
+				}
+			}
+		}
+
+		&.md-editor {
+			.collapse-tab {
+				&.horizontal {
+					left: var(--spacer-lg);
+				}
+
+				&.vertical {
+					top: var(--spacer-xxs);
+					transform: rotate(90deg);
+				}
+			}
+		}
+	}
+
+	.md-preview {
 		.settings-icon {
 			transition: all 0.3s;
 			position: absolute;
@@ -105,27 +169,25 @@ $lighter-grey: #ACBAC7;
 		background-position: 50%;
 
 		&.gutter-horizontal {
-			width: 10px !important;
+			width: 20px !important;
 			height: auto !important;
 			background-image: url("../../assets/images/horizontal-gutter.png");
 			cursor: col-resize;
 		}
 
 		&.gutter-vertical {
-			height: 10px !important;
+			height: 20px !important;
 			width: auto !important;
 			background-image: url("../../assets/images/vertical-gutter.png");
 			cursor: row-resize;
 		}
 	}
 
-	.editor-container {
-		box-sizing: border-box;
+	.md-editor {
 		background-color: #1E1E1E;
-		overflow: hidden;
+
 		.monaco-editor {
 			padding-top: var(--spacer-xl) !important;
-			
 		}
 	}
 }

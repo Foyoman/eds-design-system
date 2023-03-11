@@ -26,6 +26,10 @@ import rangeParser from "parse-numeric-range";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import Split from "react-split";
 
+import { KeyboardTab } from "@mui/icons-material";
+import HorizontalSplitIcon from '@mui/icons-material/HorizontalSplit';
+import VerticalSplitIcon from '@mui/icons-material/VerticalSplit';
+
 SyntaxHighlighter.registerLanguage('javascript', javascript);
 SyntaxHighlighter.registerLanguage('jsx', jsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
@@ -194,7 +198,9 @@ interface MarkdownParserProps {
 const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParserProps) => {
 	const { content, theme, updateSaveState, autoSaveTime } = props;
 	const [markdown, setMarkdown] = useState(content);
+	const [split, setSplit] = useState(splitDirection);
 	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
+	const [collapsedIndex, setCollapsedIndex] = useState<number>();
 	const markdownEl = useRef<HTMLDivElement>(null);
 
 	// handle change from child editor component
@@ -238,7 +244,7 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 			setComponentEl(component);
 		} else {
 			const gutter = componentEl.querySelector('.gutter');
-			if (splitDirection === "horizontal") {
+			if (split === "horizontal") {
 				gutter?.classList.remove('gutter-vertical');
 				gutter?.classList.add('gutter-horizontal');
 			} else {
@@ -246,40 +252,73 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 				gutter?.classList.add('gutter-vertical');
 			}
 		}
-	}, [componentEl, splitDirection]);
-	
+	}, [componentEl, split]);
+
 	return (
 		<Split 
-			direction={splitDirection} 
-			className={`md-parser ${theme}`}
 			id="md-parser"
+			className={`md-parser ${theme}`}
+			direction={split} 
 			sizes={[50, 50]}
 			minSize={[0, 0]}
+			snapOffset={split === 'horizontal' ? 75 : 55}
+			collapsed={collapsedIndex}
+			onDrag={() => setCollapsedIndex(undefined)} // I'd set it to null but Split sets onDrag's accepted types as number | undefined
+			gutterSize={20}
 			style={{
-				flexDirection: splitDirection === 'horizontal' ? 'row' : 'column'
+				flexDirection: split === 'horizontal' ? 'row' : 'column'
 			}}
 		>
 			<div 
 				ref={markdownEl} 
-				className="md-container"
+				className="md-preview component"
 				style={{ 
-					height: splitDirection === 'horizontal' ? '100%' : '',
-					width: splitDirection === 'horizontal' ? '' : '100%'
+					height: split === 'horizontal' ? '100%' : '',
+					width: split === 'horizontal' ? '' : '100%'
 				}}
 			>
 				<MarkdownPreview markdown={markdown} theme={markdownTheme} />
+				{ split === "horizontal" ?
+				<HorizontalSplitIcon 
+					className="split-icon" 
+					titleAccess="Enable vertical split" 
+					onClick={() => setSplit("vertical")}
+				/>
+				:
+				<VerticalSplitIcon 
+					className="split-icon" 
+					titleAccess="Enable horizontal split"
+					onClick={() => setSplit("horizontal")}
+				/>
+				}
+				<KeyboardTab 
+					className={`
+						collapse-tab 
+						${split === 'horizontal' ? 'horizontal' : 'vertical'}
+					`}
+					onClick={() => setCollapsedIndex(0)} 
+					titleAccess="Collapse"
+				/>
 			</div>
 			<div 
-				className="editor-container" 
+				className="md-editor component" 
 				style={{ 
-					height: splitDirection === 'horizontal' ? '100%' : '',
-					width: splitDirection === 'horizontal' ? '' : '100%'
+					height: split === 'horizontal' ? '100%' : '',
+					width: split === 'horizontal' ? '' : '100%'
 				}}
 			>
 				<MarkdownEditor 
 					content={content} 
 					theme={editorTheme} 
 					updateMarkdown={handleEditorChange} 
+				/>
+				<KeyboardTab 
+					className={`
+						collapse-tab 
+						${split === 'horizontal' ? 'horizontal' : 'vertical'}
+					`} 
+					onClick={() => setCollapsedIndex(1)}
+					titleAccess="Collapse"
 				/>
 			</div>
 		</Split>
