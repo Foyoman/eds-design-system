@@ -114,10 +114,10 @@ function MarkdownPreview({ markdown, theme }: MarkdownPreviewProps) {
 interface EditorProps {
 	content: string | undefined;
 	theme: "vs-dark" | "vs-light" | undefined;
-	onChange: (value: string) => void;
+	updateMarkdown: (value: string) => void;
 }
 
-function EditorComponent({ content, theme, onChange }: EditorProps) {
+function EditorComponent({ content, theme, updateMarkdown }: EditorProps) {
 	const monaco = useMonaco();
 
 	// no clue what this does
@@ -126,7 +126,7 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 	}, [monaco]);
 
 	const debouncedSetMarkdown = debounce((value: string) => {
-		onChange(value);
+		updateMarkdown(value);
 	}, 500);
 
 	// handle monaco editor changes
@@ -136,13 +136,13 @@ function EditorComponent({ content, theme, onChange }: EditorProps) {
 				if (value.length > 5000) {
 					debouncedSetMarkdown(value);
 				} else {
-					onChange(value);
+					updateMarkdown(value);
 				}
 			} else {
-				onChange("");
+				updateMarkdown("");
 			}
 		};
-	}, [debouncedSetMarkdown, onChange]);
+	}, [debouncedSetMarkdown, updateMarkdown]);
 
 	const MemoizedEditor = useMemo(() => {
 		return (
@@ -231,7 +231,7 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					height: splitDirection === 'horizontal' ? '100%' : '',
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
-				>
+			>
 				<MarkdownPreview markdown={markdown} theme={markdownTheme} />
 			</div>
 			<div 
@@ -241,7 +241,11 @@ const MarkdownParser = ({ splitDirection = 'vertical', ...props }: MarkdownParse
 					width: splitDirection === 'horizontal' ? '' : '100%'
 				}}
 			>
-				<EditorComponent content={content} theme={editorTheme} onChange={handleEditorChange} />
+				<EditorComponent 
+					content={content} 
+					theme={editorTheme} 
+					updateMarkdown={handleEditorChange} 
+				/>
 			</div>
 		</Split>
 	)
