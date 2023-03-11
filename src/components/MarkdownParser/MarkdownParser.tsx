@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import React, { useEffect, useRef, useState, useMemo } from "react";
 import { debounce } from "lodash";
 
 import "!style-loader!css-loader!sass-loader!./markdownparser.scss"
@@ -6,27 +6,40 @@ import '!style-loader!css-loader!sass-loader!./github.scss';
 
 import ReactMarkdown from "react-markdown";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
+import javascript from "react-syntax-highlighter/dist/cjs/languages/prism/javascript";
+import jsx from "react-syntax-highlighter/dist/cjs/languages/prism/jsx";
 import typescript from "react-syntax-highlighter/dist/cjs/languages/prism/typescript";
-import scss from "react-syntax-highlighter/dist/cjs/languages/prism/scss";
+import tsx from "react-syntax-highlighter/dist/cjs/languages/prism/tsx";
 import python from "react-syntax-highlighter/dist/cjs/languages/prism/python";
-import bash from "react-syntax-highlighter/dist/cjs/languages/prism/bash";
+import java from "react-syntax-highlighter/dist/cjs/languages/prism/java";
+import c from "react-syntax-highlighter/dist/cjs/languages/prism/c";
+import cpp from "react-syntax-highlighter/dist/cjs/languages/prism/cpp";
+import csharp from "react-syntax-highlighter/dist/cjs/languages/prism/csharp";
 import json from "react-syntax-highlighter/dist/cjs/languages/prism/json";
+import css from "react-syntax-highlighter/dist/cjs/languages/prism/css";
+import scss from "react-syntax-highlighter/dist/cjs/languages/prism/scss";
 import markdown from "react-syntax-highlighter/dist/cjs/languages/prism/markdown";
-import rangeParser from "parse-numeric-range";
+import bash from "react-syntax-highlighter/dist/cjs/languages/prism/bash";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import rangeParser from "parse-numeric-range";
 
 import Editor, { useMonaco } from "@monaco-editor/react";
 import Split from "react-split";
-// import SettingsIcon from '@mui/icons-material/Settings';
 
-SyntaxHighlighter.registerLanguage('tsx', tsx);
+SyntaxHighlighter.registerLanguage('javascript', javascript);
+SyntaxHighlighter.registerLanguage('jsx', jsx);
 SyntaxHighlighter.registerLanguage('typescript', typescript);
-SyntaxHighlighter.registerLanguage('scss', scss);
+SyntaxHighlighter.registerLanguage('tsx', tsx);
 SyntaxHighlighter.registerLanguage('python', python);
-SyntaxHighlighter.registerLanguage('bash', bash);
-SyntaxHighlighter.registerLanguage('markdown', markdown);
+SyntaxHighlighter.registerLanguage('java', java);
+SyntaxHighlighter.registerLanguage('c', c);
+SyntaxHighlighter.registerLanguage('cpp', cpp);
+SyntaxHighlighter.registerLanguage('csharp', csharp);
 SyntaxHighlighter.registerLanguage('json', json);
+SyntaxHighlighter.registerLanguage('css', css);
+SyntaxHighlighter.registerLanguage('scss', scss);
+SyntaxHighlighter.registerLanguage('markdown', markdown);
+SyntaxHighlighter.registerLanguage('bash', bash);
 
 
 // Markdown Preview Component
