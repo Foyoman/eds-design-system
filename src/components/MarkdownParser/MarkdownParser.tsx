@@ -131,11 +131,10 @@ interface EditorProps {
 	content: string | undefined;
 	theme: "vs-dark" | "vs-light" | undefined;
 	updateMarkdown: (value: string) => void;
-	triggerSave: (value: string) => void;
 }
 
 function MarkdownEditor(props: EditorProps) {
-	const { content, theme, updateMarkdown, triggerSave } = props;
+	const { content, theme, updateMarkdown } = props;
 	const monaco = useMonaco();
 
 	// no clue what this does
@@ -149,28 +148,20 @@ function MarkdownEditor(props: EditorProps) {
 		updateMarkdown(value);
 	}, 500);
 
-	const saveTrigger = throttle((value: string) => {
-		console.log('triggering auto save...');
-		triggerSave(value);
-	}, 10000);
-
 	// handle monaco editor changes
 	const handleInputChange = useMemo(() => { 
 		return (value: string | undefined) => {
 			if (value) {
 				if (value.length > 5000) {
 					debouncedSetMarkdown(value);
-					saveTrigger('no');
 				} else {
 					updateMarkdown(value);
-					// saveTrigger('no');
 				}
 			} else {
 				updateMarkdown("");
-				// saveTrigger('no');
 			}
 		};
-	}, [debouncedSetMarkdown, saveTrigger, updateMarkdown]);
+	}, [debouncedSetMarkdown, updateMarkdown]);
 
 	const MemoizedEditor = useMemo(() => {
 		return (
@@ -202,7 +193,6 @@ interface MarkdownParserProps {
 	theme?: "light" | "dark" | undefined;
 	splitDirection?: "vertical" | "horizontal" | undefined;
 	updateSaveState?: (value: string) => void;
-	autoSaveTime?: number;
 }
 
 const MarkdownParser = ({ 
@@ -212,29 +202,19 @@ const MarkdownParser = ({
 	updateSaveState = (value: string) => {
 		console.log('updating save state...');
 	},
-	autoSaveTime = 5000,
 	// ...props 
 }: MarkdownParserProps) => {
-	// const { updateSaveState, autoSaveTime } = props;
+	// const { updateSaveState } = props;
 	const [markdown, setMarkdown] = useState(content);
 	const [split, setSplit] = useState(splitDirection);
-	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const [collapsedIndex, setCollapsedIndex] = useState<number>();
+	const [componentEl, setComponentEl] = useState<HTMLElement | null>(null);
 	const markdownEl = useRef<HTMLDivElement>(null);
 
 	// handle change from child editor component
 	const handleEditorChange = (value: string) => {
 		setMarkdown(value);
-		// debouncedSave('yo');
 	}
-
-	const handleSaveTrigger = (value: string) => {
-		updateSaveState('yo');
-	}
-
-	const debouncedSave = throttle((value: string) => {
-		updateSaveState('yo');
-	}, 10000)
 
 	// markdown and editor theming
 	let markdownTheme: typeof oneDark;
@@ -325,7 +305,6 @@ const MarkdownParser = ({
 					content={content} 
 					theme={editorTheme} 
 					updateMarkdown={handleEditorChange} 
-					triggerSave={debouncedSave}
 				/>
 				<KeyboardTab 
 					className={`
