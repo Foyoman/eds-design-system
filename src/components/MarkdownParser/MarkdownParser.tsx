@@ -200,7 +200,13 @@ const MarkdownParser = ({
 	theme = 'dark',
 	splitDirection = 'vertical',
 	updateSaveState = (value: string) => {
+		const now = new Date();
+		const options: Intl.DateTimeFormatOptions = { year: '2-digit', month: 'numeric', day: 'numeric', hour12: true };
+		const formattedTime = now.toLocaleTimeString("en-GB", options);
+		const timeOnly = now.toLocaleTimeString("en-GB", { hour12: true });
 		console.log('updating save state...');
+		console.log('last saved at: ' + formattedTime);
+		console.log(timeOnly);
 	},
 	// ...props 
 }: MarkdownParserProps) => {
