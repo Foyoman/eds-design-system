@@ -175,7 +175,7 @@ function MarkdownEditor(props: EditorProps) {
 				onChange={handleInputChange}
 				options={{
 					selectOnLineNumbers: true,
-					wordWrap: true,
+					wordWrap: "on",
 				}}
 				className="md-editor"
 			/>
