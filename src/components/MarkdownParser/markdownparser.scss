@@ -173,4 +173,16 @@ $lighter-grey: #ACBAC7;
 			height: var(--spacer-xl);
 		}
 	}
+
+	&.light {
+		.gutter {
+			background-color: $lighter-grey;
+		}
+
+		.md-editor {
+			.padding {
+				background-color: #fff;
+			}
+		}
+	}
 }
